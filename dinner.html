@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>惜文的美食选择器</title>
+    <style>
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #e84393;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #ff758c, #ff7eb3);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 15px 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            min-height: 100px;
+            display: none;
+        }
+        
+        .food-item {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e84393;
+            margin: 15px 0;
+        }
+        
+        input {
+            padding: 12px;
+            border: 2px solid #ffcccc;
+            border-radius: 10px;
+            width: 80%;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        
+        .section {
+            margin: 30px 0;
+            display: none;
+        }
+        
+        .active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .heart {
+            color: #ff6b6b;
+            font-size: 24px;
+        }
+        
+        .logo {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🍜❤️🍔</div>
+        
+        <div id="section1" class="section active">
+            <h1>是哪个小可爱要吃晚饭鸭?</h1>
+            <input type="text" id="nameInput" placeholder="请输入你的名字">
+            <button class="btn" onclick="checkName()">提交</button>
+        </div>
+        
+        <div id="section2" class="section">
+            <h1>臭宝晚上好鸭~</h1>
+            <p>继续对话请按Y，不要瓦达西了请按N</p>
+            <button class="btn" onclick="showFoodSection()">Y</button>
+            <button class="btn" onclick="showBye()">N</button>
+        </div>
+        
+        <div id="section3" class="section">
+            <h1>臭宝晚上想吃什么捏？</h1>
+            <p>想吃什么就打字叭，布吉岛的话就按B</p>
+            <input type="text" id="foodInput" placeholder="输入想吃的美食">
+            <button class="btn" onclick="handleFoodInput()">确定</button>
+            <button class="btn" onclick="askMagicConch()">B</button>
+        </div>
+        
+        <div id="section4" class="section">
+            <h1>那我们问问神奇的海螺叭</h1>
+            <div class="result" id="conchResult"></div>
+        </div>
+        
+        <div id="section5" class="section">
+            <h1>好嘟，今天我们就去吃</h1>
+            <div class="result" id="foodResult"></div>
+        </div>
+        
+        <div id="section6" class="section">
+            <h1 class="heart">❤️</h1>
+            <p>你吗</p>
+            <button class="btn" onclick="restart()">重新开始</button>
+        </div>
+    </div>
+
+    <script>
+        const foods = [
+            "汉堡！我们有救了！🍔",
+            "炸鸡！我们有救了！🍗",
+            "牛肉面！我们有救了！🍜",
+            "羊杂面！我们有救了！🥣",
+            "火锅！我们有救了！🍲",
+            "烤肉！我们有救了！🥩",
+            "烧烤！我们有救了！🍖",
+            "西北风！我们有救了！💨",
+            "螺蛳粉！我们有救了！🍜",
+            "烤肉拌饭！我们有救了！🍚",
+            "达芬！我们没救了！😭"
+        ];
+        
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            setTimeout(() => {
+                document.getElementById(id).classList.add('active');
+            }, 100);
+        }
+        
+        function checkName() {
+            const name = document.getElementById('nameInput').value;
+            if (name === "郑惜文") {
+                showSection('section2');
+            } else {
+                alert("不认识的小可爱呢~");
+            }
+        }
+        
+        function showFoodSection() {
+            showSection('section3');
+        }
+        
+        function showBye() {
+            showSection('section6');
+        }
+        
+        function handleFoodInput() {
+            const food = document.getElementById('foodInput').value;
+            if (food) {
+                document.getElementById('foodResult').innerHTML = 
+                    `<div class="food-item">${food}</div>`;
+                showSection('section5');
+            }
+        }
+        
+        function askMagicConch() {
+            showSection('section4');
+            const resultDiv = document.getElementById('conchResult');
+            
+            // 显示加载动画
+            resultDiv.innerHTML = '<p>海螺思考中... 🐚</p>';
+            
+            // 3秒后显示结果
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * foods.length);
+                resultDiv.innerHTML = `<div class="food-item">${foods[randomIndex]}</div>`;
+            }, 3000);
+        }
+        
+        function restart() {
+            document.getElementById('nameInput').value = '';
+            document.getElementById('foodInput').value = '';
+            document.getElementById('conchResult').innerHTML = '';
+            document.getElementById('foodResult').innerHTML = '';
+            showSection('section1');
+        }
+    </script>
+</body>
+</html>
